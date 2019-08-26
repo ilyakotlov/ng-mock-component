@@ -23,3 +23,17 @@ export function MockComponent(options: Component): Component {
 
   return Component(metadata)(Mock as any);
 }
+
+export function MockPipe(options: Pipe): Pipe {
+  const metadata = {...options};
+  metadata.outputs = metadata.outputs || [];
+  metadata.exportAs = metadata.exportAs || '';
+
+  class Mock {}
+
+  metadata.outputs.forEach(method => {
+    Mock.prototype[method] = new EventEmitter<any>();
+  });
+
+  return Pipe(metadata)(Mock as any);
+}
